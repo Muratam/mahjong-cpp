@@ -8,7 +8,6 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
-#include <boost/dll.hpp>
 
 #include "requiredtileselector.hpp"
 #include "syanten.hpp"
@@ -17,7 +16,7 @@
 
 namespace mahjong
 {
-
+void initiaize_fs();
 ExpectedValueCalculator::ExpectedValueCalculator()
     : calc_syanten_down_(false)
     , calc_tegawari_(false)
@@ -28,12 +27,13 @@ ExpectedValueCalculator::ExpectedValueCalculator()
     , discard_cache_(5) // 0(聴牌) ~ 4(4向聴)
     , draw_cache_(5)    // 0(聴牌) ~ 4(4向聴)
 {
+    initiaize_fs();
     make_uradora_table();
 }
 
 /**
  * @brief 期待値を計算する。
- * 
+ *
  * @param hand 手牌
  * @param score_calculator 点数計算機
  * @param dora_indicators ドラ表示牌の一覧
@@ -162,8 +162,7 @@ bool ExpectedValueCalculator::make_uradora_table()
 
     uradora_prob_table_.resize(6);
 
-    boost::filesystem::path path = boost::dll::program_location().parent_path() / "uradora.txt";
-    std::ifstream ifs(path.string());
+    std::ifstream ifs("res/uradora.txt");
 
     std::string line;
     int i = 0;
@@ -181,7 +180,7 @@ bool ExpectedValueCalculator::make_uradora_table()
 
 /**
  * @brief 自摸確率のテーブルを初期化する。
- * 
+ *
  * @param[in] n_left_tiles 1巡目時点の残り枚数の合計
  */
 void ExpectedValueCalculator::create_prob_table(int n_left_tiles)
@@ -396,8 +395,8 @@ std::vector<double> ExpectedValueCalculator::get_score(const Hand &hand, int win
 
 /**
  * @brief 自摸する。(手変わりを考慮しない)
- * 
- * @param[in] n_extra_tumo 
+ *
+ * @param[in] n_extra_tumo
  * @param[in] syanten 向聴数
  * @param[in] hand 手牌
  * @param[in] counts 各牌の残り枚数
@@ -491,13 +490,13 @@ ExpectedValueCalculator::draw_without_tegawari(int n_extra_tumo, int syanten, Ha
 
 /**
  * @brief 自摸する。(手変わりを考慮する)
- * 
- * @param[in] n_extra_tumo 
+ *
+ * @param[in] n_extra_tumo
  * @param[in] syanten 向聴数
  * @param[in] hand 手牌
  * @param[in] counts 各牌の残り枚数
  * @return (各巡目の聴牌確率, 各巡目の和了確率, 各巡目の期待値)
- * 
+ *
  * この関数が呼ばれた時点で向聴戻しは行われていない
  */
 std::tuple<std::vector<double>, std::vector<double>, std::vector<double>>
@@ -597,8 +596,8 @@ ExpectedValueCalculator::draw_with_tegawari(int n_extra_tumo, int syanten, Hand 
 
 /**
  * @brief 自摸する。
- * 
- * @param[in] n_extra_tumo 
+ *
+ * @param[in] n_extra_tumo
  * @param[in] syanten 向聴数
  * @param[in] hand 手牌
  * @param[in] counts 各牌の残り枚数
@@ -615,8 +614,8 @@ ExpectedValueCalculator::draw(int n_extra_tumo, int syanten, Hand &hand, std::ve
 
 /**
  * @brief 打牌する。
- * 
- * @param[in] n_extra_tumo 
+ *
+ * @param[in] n_extra_tumo
  * @param[in] syanten 向聴数
  * @param[in] hand 手牌
  * @param[in] counts 各牌の残り枚数

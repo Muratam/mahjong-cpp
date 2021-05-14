@@ -9,20 +9,13 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")
-  # MSVC の場合、UTF-8 として解釈するように指定する。
-  add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
-  add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-endif()
-
 # Boost
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
-include_directories(${Boost_INCLUDE_DIRS})
+# find_package(Boost REQUIRED)
+# include_directories(${Boost_INCLUDE_DIRS})
+include_directories(/usr/local/Cellar/boost/1.75.0_1/include)
 
 # Fetch rapidjson
 include(FetchContent)
@@ -50,20 +43,8 @@ endif()
 # mahjong
 include_directories(src)
 
-# サーバー
-option(BUILD_SERVER "build server programs." ON)
-if(BUILD_SERVER)
-  add_subdirectory(src/server)
-endif()
-
-# テスト
-option(BUILD_TEST "build test programs." ON)
-if(BUILD_TEST)
-  add_subdirectory(src/test)
-endif()
-
-# サンプル
-option(BUILD_SAMPLES "build sample programs." ON)
-if(BUILD_SAMPLES)
-  add_subdirectory(src/samples)
+# emscripten
+option(BUILD_EMSCRIPTEN "build emscripten test." ON)
+if(BUILD_EMSCRIPTEN)
+  add_subdirectory(src/emscripten)
 endif()

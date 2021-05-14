@@ -1,16 +1,14 @@
 #include "syanten.hpp"
-
-#include <boost/dll.hpp>
 #include <spdlog/spdlog.h>
 
 #include <fstream>
+#include <stdio.h>
 
 #include "bitutils.hpp"
 
 namespace mahjong
 {
-
-SyantenCalculator::SyantenCalculator() { initialize(); }
+SyantenCalculator::SyantenCalculator() {}
 
 /**
  * @brief 向聴数を計算する。
@@ -56,26 +54,21 @@ std::tuple<int, int> SyantenCalculator::calc(const Hand &hand, int type)
  */
 bool SyantenCalculator::initialize()
 {
-    boost::filesystem::path exe_path = boost::dll::program_location().parent_path();
 
 #ifdef USE_UNORDERED_MAP
     if (s_tbl_.empty()) {
-        boost::filesystem::path path = exe_path / "syupai_table.bin";
-        std::ifstream ifs(path.string(), std::ios::binary);
+        std::ifstream ifs("res/syupai_table.bin", std::ios::binary);
         for (size_t i = 0; i < ShuupaiPatternSize; ++i) {
             unsigned int key;
             Pattern pattern;
             ifs.read((char *)&key, sizeof(unsigned int));
             ifs.read((char *)&pattern, sizeof(Pattern));
-
             s_tbl_[key] = pattern;
         }
     }
 
     if (z_tbl_.empty()) {
-        boost::filesystem::path path = exe_path / "zihai_table.bin";
-        std::ifstream ifs(path.string(), std::ios::binary);
-
+        std::ifstream ifs("res/zihai_table.bin", std::ios::binary);
         for (size_t i = 0; i < ZihaiPatternSize; ++i) {
             unsigned int key;
             Pattern pattern;
@@ -88,9 +81,7 @@ bool SyantenCalculator::initialize()
 #else
     if (s_tbl_.empty()) {
         s_tbl_.resize(ShuupaiTableSize);
-
-        boost::filesystem::path path = exe_path / "syupai_table.bin";
-        std::ifstream ifs(path.string(), std::ios::binary);
+        std::ifstream ifs("res/syupai_table.bin", std::ios::binary);
         for (size_t i = 0; i < ShuupaiPatternSize; ++i) {
             unsigned int key;
             ifs.read((char *)&key, sizeof(unsigned int));
@@ -101,8 +92,7 @@ bool SyantenCalculator::initialize()
     if (z_tbl_.empty()) {
         z_tbl_.resize(ZihaiTableSize);
 
-        boost::filesystem::path path = exe_path / "zihai_table.bin";
-        std::ifstream ifs(path.string(), std::ios::binary);
+        std::ifstream ifs("res/zihai_table.bin", std::ios::binary);
 
         for (size_t i = 0; i < ZihaiPatternSize; ++i) {
             unsigned int key;
@@ -125,9 +115,8 @@ int SyantenCalculator::calc_normal(const Hand &hand)
 {
     // 制約条件「面子 + 候補 <= 4」で「面子数 * 2 + 候補」の最大値を計算する。
     int n_melds = int(hand.melds.size());
-    int n_mentu_base = n_melds + s_tbl_[hand.manzu].n_mentu +
-                       s_tbl_[hand.pinzu].n_mentu + s_tbl_[hand.sozu].n_mentu +
-                       z_tbl_[hand.zihai].n_mentu;
+    int n_mentu_base = n_melds + s_tbl_[hand.manzu].n_mentu + s_tbl_[hand.pinzu].n_mentu +
+                       s_tbl_[hand.sozu].n_mentu + z_tbl_[hand.zihai].n_mentu;
     int n_kouho_base = s_tbl_[hand.manzu].n_kouho + s_tbl_[hand.pinzu].n_kouho +
                        s_tbl_[hand.sozu].n_kouho + z_tbl_[hand.zihai].n_kouho;
 
@@ -174,11 +163,11 @@ int SyantenCalculator::calc_normal(const Hand &hand)
 int SyantenCalculator::calc_tiitoi(const Hand &hand)
 {
     // 牌の種類 (1枚以上の牌) を数える。
-    int n_types = s_tbl_[hand.manzu].n_ge1 + s_tbl_[hand.pinzu].n_ge1 +
-                  s_tbl_[hand.sozu].n_ge1 + z_tbl_[hand.zihai].n_ge1;
+    int n_types = s_tbl_[hand.manzu].n_ge1 + s_tbl_[hand.pinzu].n_ge1 + s_tbl_[hand.sozu].n_ge1 +
+                  z_tbl_[hand.zihai].n_ge1;
     // 対子の数 (2枚以上の牌) を数える。
-    int n_toitu = s_tbl_[hand.manzu].n_ge2 + s_tbl_[hand.pinzu].n_ge2 +
-                  s_tbl_[hand.sozu].n_ge2 + z_tbl_[hand.zihai].n_ge2;
+    int n_toitu = s_tbl_[hand.manzu].n_ge2 + s_tbl_[hand.pinzu].n_ge2 + s_tbl_[hand.sozu].n_ge2 +
+                  z_tbl_[hand.zihai].n_ge2;
 
     int syanten = 6 - n_toitu;
     if (n_types < 7)
@@ -201,8 +190,8 @@ int SyantenCalculator::calc_kokusi(const Hand &hand)
     int sozu19 = hand.sozu & Bit::RotohaiMask;
 
     // 幺九牌の種類 (1枚以上の牌) を数える。
-    int n_yaotyuhai = s_tbl_[manzu19].n_ge1 + s_tbl_[pinzu19].n_ge1 +
-                      s_tbl_[sozu19].n_ge1 + z_tbl_[hand.zihai].n_ge1;
+    int n_yaotyuhai = s_tbl_[manzu19].n_ge1 + s_tbl_[pinzu19].n_ge1 + s_tbl_[sozu19].n_ge1 +
+                      z_tbl_[hand.zihai].n_ge1;
 
     // 幺九牌の対子があるかどうか
     int toitu = ((manzu19 & 0b110'000'000'000'000'000'000'000'110) |

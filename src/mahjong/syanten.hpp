@@ -3,7 +3,7 @@
 
 #include "types/types.hpp"
 
-//#define USE_UNORDERED_MAP // テーブルに std::unordered_map を使う場合
+#define USE_UNORDERED_MAP // テーブルに std::unordered_map を使う場合
 
 namespace mahjong
 {
@@ -71,9 +71,9 @@ class SyantenCalculator
 
 #ifdef USE_UNORDERED_MAP
     /*! 数牌のテーブル */
-    static std::unordered_map<key_type, Pattern> s_tbl_;
+    static std::unordered_map<Hand::key_type, Pattern> s_tbl_;
     /*! 字牌のテーブル */
-    static std::unordered_map<key_type, Pattern> z_tbl_;
+    static std::unordered_map<Hand::key_type, Pattern> z_tbl_;
 #else
     /*! 数牌のテーブル */
     static std::vector<Pattern> s_tbl_;
