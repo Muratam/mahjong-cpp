@@ -11,7 +11,7 @@ using namespace mahjong;
 
 /**
  * @brief JSON ドキュメントを文字列にする。
- * 
+ *
  * @param[in] doc ドキュメント
  * @return std::string JSON ドキュメント
  */
@@ -218,7 +218,7 @@ rapidjson::Value dump_draw_response(const DrawResponseData &res, rapidjson::Docu
     rapidjson::Value value(rapidjson::kObjectType);
     value.AddMember("result_type", 0, doc.GetAllocator());
     value.AddMember("syanten", res.syanten, doc.GetAllocator());
-    value.AddMember("time", res.time_us, doc.GetAllocator());
+    value.AddMember("time", static_cast<int>(res.time_us), doc.GetAllocator());
     value.AddMember("required_tiles", dump_required_tiles(res.required_tiles, doc),
                     doc.GetAllocator());
 
@@ -230,7 +230,7 @@ rapidjson::Value dump_discard_response(const DiscardResponseData &res, rapidjson
     rapidjson::Value value(rapidjson::kObjectType);
     value.AddMember("result_type", 1, doc.GetAllocator());
     value.AddMember("syanten", res.syanten, doc.GetAllocator());
-    value.AddMember("time", res.time_us, doc.GetAllocator());
+    value.AddMember("time", static_cast<int>(res.time_us), doc.GetAllocator());
     value.AddMember("candidates", rapidjson::kArrayType, doc.GetAllocator());
     for (const auto &candidate : res.candidates)
         value["candidates"].PushBack(dump_candidate(candidate, doc), doc.GetAllocator());
