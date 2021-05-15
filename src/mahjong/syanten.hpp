@@ -3,7 +3,7 @@
 
 #include "types/types.hpp"
 
-#define USE_UNORDERED_MAP // テーブルに std::unordered_map を使う場合
+// #define USE_UNORDERED_MAP // テーブルに std::unordered_map を使う場合
 
 namespace mahjong
 {
