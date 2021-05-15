@@ -13,9 +13,11 @@ endif()
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
+
+include_directories(/usr/local/include)
+# なぜかemcmakeではうまく動作しないので↑でboostを読む
 # find_package(Boost REQUIRED)
 # include_directories(${Boost_INCLUDE_DIRS})
-include_directories(/usr/local/Cellar/boost/1.75.0_1/include)
 
 # Fetch rapidjson
 include(FetchContent)

@@ -2,30 +2,23 @@
 
 ## About
 
-fork of https://github.com/nekobean/mahjong-cpp
+fork of https://github.com/nekobean/mahjong-cpp .
 
-## How to build
+emscripten compiled version.
 
-for shell
-
-```bash
-mkdir build && cd build
-cmake ..
-make
-./src/emscripten/sample
-```
-
-for emscripten
+## How to build and run
 
 ```bash
+# build
 mkdir build && cd build
 emcmake cmake ..
 emmake make
-cd ./src/emscripten/
-node
-> let main = require("./main")
-> main.run_sample()
-> main.process_request('{"zikaze":27,"bakaze":27,"turn":3,"syanten_type":1,"dora_indicators":[27],"flag":63,"hand_tiles":[0,34,6,9,11,12,13,35,13,17,20,23,24,25],"melded_blocks":[]}')
+# copy files to server
+cp ./src/emscripten/main.* /path/to/dir
+# in brwoser
+> load: <script src="main.js"></script>
+> Module.run_sample()
+> Module.process_request('{"zikaze":27,"bakaze":27,"turn":3,"syanten_type":1,"dora_indicators":[27],"flag":63,"hand_tiles":[0,34,6,9,11,12,13,35,13,17,20,23,24,25],"melded_blocks":[]}')
 ```
 
 ## Usage

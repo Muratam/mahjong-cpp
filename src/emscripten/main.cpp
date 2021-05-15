@@ -121,10 +121,6 @@ EMSCRIPTEN_BINDINGS(mahjong)
 
 int main()
 {
-    EM_ASM(if (NODEFS) {
-        FS.mkdir('res');
-        FS.mount(NODEFS, {root : '.'}, 'res');
-    });
     SyantenCalculator::initialize();
     HandSeparator::initialize();
 }
