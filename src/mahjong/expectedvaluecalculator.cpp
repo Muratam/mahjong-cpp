@@ -16,7 +16,6 @@
 
 namespace mahjong
 {
-void initiaize_fs();
 ExpectedValueCalculator::ExpectedValueCalculator()
     : calc_syanten_down_(false)
     , calc_tegawari_(false)
@@ -27,7 +26,6 @@ ExpectedValueCalculator::ExpectedValueCalculator()
     , discard_cache_(5) // 0(聴牌) ~ 4(4向聴)
     , draw_cache_(5)    // 0(聴牌) ~ 4(4向聴)
 {
-    initiaize_fs();
     make_uradora_table();
 }
 
