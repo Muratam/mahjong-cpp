@@ -85,6 +85,7 @@ std::string process_request(const std::string &json)
     doc.AddMember("success", true, doc.GetAllocator());
     doc.AddMember("request", req_doc.GetObject(), doc.GetAllocator());
     doc.AddMember("response", res_doc, doc.GetAllocator());
+
     return to_json_str(doc);
 }
 

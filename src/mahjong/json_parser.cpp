@@ -1,5 +1,6 @@
 #include "json_parser.hpp"
 
+#include <iostream>
 #include <sstream>
 
 #include <rapidjson/istreamwrapper.h>
@@ -20,8 +21,9 @@ std::string to_json_str(rapidjson::Document &doc)
     std::stringstream ss;
     rapidjson::OStreamWrapper osw(ss);
     rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(osw);
+    writer.SetIndent(' ', 0);
+    writer.SetFormatOptions(rapidjson::PrettyFormatOptions::kFormatSingleLineArray);
     doc.Accept(writer);
-
     return ss.str();
 }
 
@@ -245,6 +247,23 @@ rapidjson::Value create_response(const RequestData &req, rapidjson::Document &do
 
     if (n_tiles == 14) {
         DiscardResponseData res = create_discard_response(req);
+        for (auto &cand : res.candidates) {
+            for (auto i = 0; i < cand.exp_values.size(); i++) {
+                if (std::isnan(cand.exp_values[i])) {
+                    cand.exp_values[i] = 0.0;
+                }
+            }
+            for (auto i = 0; i < cand.win_probs.size(); i++) {
+                if (std::isnan(cand.win_probs[i])) {
+                    cand.win_probs[i] = 0.0;
+                }
+            }
+            for (auto i = 0; i < cand.tenpai_probs.size(); i++) {
+                if (std::isnan(cand.tenpai_probs[i])) {
+                    cand.tenpai_probs[i] = 0.0;
+                }
+            }
+        }
         return dump_discard_response(res, doc);
     }
     else {
