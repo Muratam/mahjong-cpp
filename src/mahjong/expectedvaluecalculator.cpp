@@ -41,7 +41,8 @@ ExpectedValueCalculator::ExpectedValueCalculator()
  */
 std::tuple<bool, std::vector<Candidate>>
 ExpectedValueCalculator::calc(const Hand &hand, const ScoreCalculator &score_calculator,
-                              const std::vector<int> &dora_indicators, int syanten_type, int flag)
+                              const std::vector<int> &dora_indicators, int syanten_type, int flag,
+                              const std::vector<int> &kawa)
 {
     std::vector<Candidate> candidates;
 
@@ -67,7 +68,7 @@ ExpectedValueCalculator::calc(const Hand &hand, const ScoreCalculator &score_cal
         return {false, {}}; // 手牌が和了形の場合
 
     // 各牌の残り枚数を数える。
-    std::vector<int> counts = count_left_tiles(hand, dora_indicators_);
+    std::vector<int> counts = count_left_tiles(hand, dora_indicators_, kawa);
     int sum_left_tiles = std::accumulate(counts.begin(), counts.begin() + 34, 0);
 
     // 自摸確率のテーブルを作成する。
@@ -115,7 +116,8 @@ ExpectedValueCalculator::get_required_tiles(const Hand &hand, int syanten_type,
  * @return 各牌の残り枚数
  */
 std::vector<int> ExpectedValueCalculator::count_left_tiles(const Hand &hand,
-                                                           const std::vector<int> &dora_indicators)
+                                                           const std::vector<int> &dora_indicators,
+                                                           const std::vector<int> &kawa)
 {
     std::vector<int> counts(37, 4);
     counts[Tile::AkaManzu5] = counts[Tile::AkaPinzu5] = counts[Tile::AkaSozu5] = 1;
@@ -139,6 +141,13 @@ std::vector<int> ExpectedValueCalculator::count_left_tiles(const Hand &hand,
 
     // ドラ表示牌を除く。
     for (auto tile : dora_indicators) {
+        counts[aka2normal(tile)]--;
+        counts[Tile::AkaManzu5] -= tile == Tile::AkaManzu5;
+        counts[Tile::AkaPinzu5] -= tile == Tile::AkaPinzu5;
+        counts[Tile::AkaSozu5] -= tile == Tile::AkaSozu5;
+    }
+    // 河を除く。
+    for (auto tile : kawa) {
         counts[aka2normal(tile)]--;
         counts[Tile::AkaManzu5] -= tile == Tile::AkaManzu5;
         counts[Tile::AkaPinzu5] -= tile == Tile::AkaPinzu5;

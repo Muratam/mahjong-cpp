@@ -252,11 +252,13 @@ class ExpectedValueCalculator
     std::tuple<bool, std::vector<Candidate>> calc(const Hand &hand,
                                                   const ScoreCalculator &score_calculator,
                                                   const std::vector<int> &dora_indicators,
-                                                  int syanten_type, int flag = 0);
+                                                  int syanten_type, int flag = 0,
+                                                  const std::vector<int> &kawa = {});
     static std::vector<std::tuple<int, int>> get_required_tiles(const Hand &hand, int syanten_type,
                                                                 const std::vector<int> &counts);
     static std::vector<int> count_left_tiles(const Hand &hand,
-                                             const std::vector<int> &dora_indicators);
+                                             const std::vector<int> &dora_indicators,
+                                             const std::vector<int> &kawa = {});
 
     // private:
     static bool make_uradora_table();

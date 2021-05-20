@@ -18,7 +18,7 @@ cp ./src/emscripten/main.* /path/to/dir
 # in brwoser
 > load: <script src="main.js"></script>
 > Module.run_sample()
-> Module.process_request('{"zikaze":27,"bakaze":27,"turn":3,"syanten_type":1,"dora_indicators":[27],"flag":63,"hand_tiles":[0,34,6,9,11,12,13,35,13,17,20,23,24,25],"melded_blocks":[]}')
+> Module.process_request('{"zikaze":27,"bakaze":27,"turn":3,"syanten_type":1,"dora_indicators":[27],"flag":63,"hand_tiles":[0,34,6,9,11,12,13,35,13,17,20,23,24,25],"melded_blocks":[], "kawa":[], "tsumo":0}')
 ```
 
 ## Usage

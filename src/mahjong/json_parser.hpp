@@ -12,6 +12,8 @@ struct RequestData
     int turn;
     int syanten_type;
     std::vector<int> dora_indicators;
+    std::vector<int> kawa;
+    int tsumo;
     mahjong::Hand hand;
     int flag;
     std::string ip;

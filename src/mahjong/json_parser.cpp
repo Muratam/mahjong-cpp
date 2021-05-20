@@ -41,6 +41,9 @@ RequestData parse_request(const rapidjson::Value &doc)
     req.bakaze = doc["bakaze"].GetInt();
     req.turn = doc["turn"].GetInt();
     req.syanten_type = doc["syanten_type"].GetInt();
+    req.tsumo = doc["tsumo"].GetInt();
+    for (auto &x : doc["kawa"].GetArray())
+        req.kawa.push_back(x.GetInt());
 
     for (auto &x : doc["dora_indicators"].GetArray())
         req.dora_indicators.push_back(x.GetInt());

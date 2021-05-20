@@ -75,7 +75,24 @@ std::string process_request(const std::string &json)
     if (syanten == -1) {
         doc.AddMember("success", false, doc.GetAllocator());
         doc.AddMember("request", req_doc.GetObject(), doc.GetAllocator());
-        doc.AddMember("err_msg", "和了形です。", doc.GetAllocator());
+        ScoreCalculator score;
+        // 場やルールの設定
+        score.set_bakaze(req.bakaze); // 場風牌
+        score.set_zikaze(req.zikaze); // 自風牌
+        score.set_num_tumibo(0);      // 積み棒の数
+        score.set_num_kyotakubo(0);   // 供託棒の数
+        std::vector<int> doras = {};
+        for (auto tile : req.dora_indicators) {
+            doras.push_back(Indicator2Dora.at(tile));
+        }
+        score.set_dora_tiles(doras); // ドラの一覧 (表示牌ではない)
+        score.set_uradora_tiles({}); // 裏ドラの一覧 (表示牌ではない)
+        int flag = HandFlag::Tumo;   // フラグ
+        // 点数計算
+        Result ret = score.calc(req.hand, req.tsumo, flag);
+        std::string res_str = std::string{"agari:"} + ret.to_string();
+        rapidjson::Value value(res_str.c_str(), doc.GetAllocator());
+        doc.AddMember("err_msg", value, doc.GetAllocator());
         return to_json_str(doc);
     }
 
